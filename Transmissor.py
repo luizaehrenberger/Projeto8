@@ -53,7 +53,7 @@ duracao_filtrada = np.linspace(0, 3, len(signal_filtrado))
 
 #Module esse sinal de áudio em AM com portadora de 14.000 Hz - 4
 portadora = 14000
-sinal_modulado = signal_filtrado*np.sin(2*np.pi*portadora*duracao_filtrada)
+sinal_modulado = signal_filtrado*np.sin(4*np.pi*portadora*duracao_filtrada)
 
 # Normalize esse sinal: multiplicar o sinal por uma constante (a maior possível), de modo que todos os pontos
 # do sinal permaneçam dentro do intervalo[-1,1] - 5
@@ -61,10 +61,11 @@ sinal_normalizado = signal_original/np.abs(np.max(signal_original))
 
 #Reproduza o sinal modulado e verifique que continua audível - 6
 print("modulado")
-# sd.play(sinal_modulado, taxa_amostragem)
-# sd.wait()
-# sf.write('audio.wav', sinal_modulado, taxa_amostragem)
+sd.play(sinal_modulado, taxa_amostragem)
+sd.wait()
+sf.write('audio.wav', sinal_modulado, taxa_amostragem)
 
+signal_plot.plotFFT(sinal_modulado, taxa_amostragem)
 #graficos
 #Gráfico 1: Sinal de áudio original normalizado – domínio do tempo.
 plt.figure("original_normalizado")
@@ -99,3 +100,4 @@ plt.ylabel("Amplitude")
 plt.show()
 
 #Gráfico 5: Sinal de áudio modulado – domínio da frequência (Fourier). NÃO SEI TAMBEM
+signal_plot.plotFFT(sinal_modulado, taxa_amostragem)

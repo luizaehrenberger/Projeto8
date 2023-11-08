@@ -1,9 +1,10 @@
-import wave
+import soundfile as sf
 import numpy as np
 import sounddevice as sd
 import matplotlib.pyplot as plt
 from scipy.fftpack import fft
-from scipy import signal as window
+
+from scipy import signal as sg
 
 #Define a função de filtro
 def filtro(y, samplerate, cutoff_hz):
@@ -25,7 +26,7 @@ class signalMeu:
  
     def calcFFT(self, signal, fs):
         N  = len(signal)
-        W = window.hamming(N)
+        W = sg.hamming(N)
         T  = 1/fs
         xf = np.linspace(0.0, 1.0/(2.0*T), N//2)
         yf = fft(signal*W)
@@ -61,7 +62,8 @@ numAmostras = int(sd.default.samplerate * tGravacao)
 # sd.wait()
 # print('Fim do Audio Modulado')
 
-audio_modulado = sd.read('modulado.wav')[0]
+audio_modulado, samplerate = sf.read('audio.wav')
+signal.plotFFT(audio_modulado, freq_leitura)
 
 
 audio_samples = len(audio_modulado)
@@ -80,6 +82,9 @@ print('Audio Demodulado...')
 sd.play(audio_demodulado, freq_leitura)
 sd.wait()
 print('Fim do Audio Demodulado')
+
+#Plot do fourier
+signal.plotFFT(audio_demodulado, freq_leitura)
 
 #Plotando o grafico do sinal demodulado pelo tempo
 plt.plot(vetor_tempo[::500], audio_demodulado[::500])
