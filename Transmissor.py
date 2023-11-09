@@ -65,25 +65,29 @@ sd.play(sinal_normalizado, taxa_amostragem)
 sd.wait()
 sf.write('audio.wav', sinal_modulado, taxa_amostragem)
 
-signal_plot.plotFFT(sinal_modulado, taxa_amostragem)
+
+# signal_plot.plotFFT(sinal_modulado, taxa_amostragem)
+
 #graficos
 #Gráfico 1: Sinal de áudio original normalizado – domínio do tempo.
-plt.figure("modulado_normalizado")
+plt.figure(" Grafico 1 normalizado no tempo")
 plt.plot(duracao, sinal_normalizado)
-plt.title("Sinal de áudio modulado normalizado")
+plt.title("Grafico 1 normalizado no tempo")
 plt.xlabel("Tempo (s)")
 plt.ylabel("Amplitude")
 plt.show()
 
 #Gráfico 2: Sinal de áudio filtrado – domínio do tempo. (repare que não se nota diferença). 
-plt.figure("filtrado")
+plt.figure("Grafico 2 filtrado no tempo")
 plt.plot(duracao_filtrada, signal_filtrado)
-plt.title("Sinal de áudio filtrado")
+plt.title("Grafico 2 filtrado no tempo")
 plt.xlabel("Tempo (s)")
 plt.ylabel("Amplitude")
 plt.show()
 
 #Gráfico 3: Sinal de áudio filtrado – domínio da frequência (Fourier). ERRADO
+signal_plot.plotFFT(signal_filtrado, taxa_amostragem)
+plt.title("Grafico 3 Sinal de áudio filtrado na frequencia")
 # plt.figure("filtrado_fourier")
 # plt.plot(taxa_amostragem, signal_filtrado)
 # plt.title("Sinal de áudio filtrado")
@@ -94,10 +98,11 @@ plt.show()
 #Gráfico 4: Sinal de áudio modulado – domínio do tempo.
 plt.figure("modulado")
 plt.plot(duracao_filtrada, sinal_modulado)
-plt.title("Sinal de áudio modulado")
+plt.title("Grafico 4 Sinal de áudio modulado no tempo")
 plt.xlabel("Tempo (s)")
 plt.ylabel("Amplitude")
 plt.show()
 
 #Gráfico 5: Sinal de áudio modulado – domínio da frequência (Fourier). NÃO SEI TAMBEM
 signal_plot.plotFFT(sinal_modulado, taxa_amostragem)
+plt.title("Sinal de áudio modulado na frequencia")

@@ -67,7 +67,7 @@ signal.plotFFT(audio_modulado, freq_leitura, 'modulado')
 
 audio_samples = len(audio_modulado)
 duracao = audio_samples/freq_leitura
-vetor_tempo = np.linspace(0, duracao, audio_samples)
+vetor_tempo = np.linspace(0, 4, audio_samples)
 
 #definindo a portadora
 senoide_portadora = 1 * np.sin(2*np.pi*freq_portadora*vetor_tempo)
@@ -80,23 +80,27 @@ sd.play(audio_demodulado, freq_leitura)
 sd.wait()
 print('Fim do Audio Demodulado')
 
+
 #Plotando o grafico do sinal demodulado pelo tempo
+plt.figure("Sinal recebido no tempo")
 plt.plot(vetor_tempo[::500], audio_demodulado[::500])
-plt.title("Sinal recebido")
+plt.title("Sinal demodulado no tempo")
 plt.show()
 #Plot do fourier
 signal.plotFFT(audio_demodulado, freq_leitura, 'demodulado')
+plt.title("Sinal demodulado na frequencia")
 
 ########################################FILTRO##################################
 #Filtrando o sinal
 filtrado = filtro(audio_demodulado, freq_leitura, 4000)
 
-# #Plotando o grafico do sinal filtrado pelo tempo
-plt.plot(vetor_tempo[::500], filtrado[::500])
-plt.title("Sinal recebido filtrado")
-plt.show()
+# # #Plotando o grafico do sinal filtrado pelo tempo
+# plt.plot(vetor_tempo[::500], filtrado[::500])
+# plt.title("Sinal recebido filtrado")
+# plt.show()
 #Plot do fourier
 signal.plotFFT(filtrado, freq_leitura, 'filtrado')
+plt.title("Sinal demodulado e filtrado na frequencia")
 plt.show()
 
 # #Tocando o som filtrado
