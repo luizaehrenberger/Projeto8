@@ -15,6 +15,28 @@ def filtro(y, samplerate, cutoff_hz):
     yFiltrado = sg.lfilter(taps, 1.0, y)
     return yFiltrado
 
+def filtro_meu(signal):
+    #MatLab
+    # w = 2500
+    # s = tf('s')
+    # G = (w^2/(s^2+2*w*s + w^2))
+    # G_d = c2d(G,1/44100) --> 0.001547s+0.00149/z^2-1.89z+0.8928
+
+    #Leganda nos slides
+    a = 0.001547
+    b = 0.00149
+    d = -1.89
+    e = 0.8928
+
+    sinal_filtrado = [signal[0],signal[1]]
+    for k in range(2, len(signal)):
+        P = -d * sinal_filtrado[k - 1] - e*sinal_filtrado[k - 2] + a*signal[k - 1] + b*signal[k - 2]
+        sinal_filtrado.append(P)
+
+    return sinal_filtrado
+
+
+
 #Define a classe do sinal
 class signalMeu:
     def __init__(self):
@@ -70,7 +92,7 @@ duracao = audio_samples/freq_leitura
 vetor_tempo = np.linspace(0, 4, audio_samples)
 
 #definindo a portadora
-senoide_portadora = 1 * np.sin(2*np.pi*freq_portadora*vetor_tempo)
+senoide_portadora = 15 * np.sin(2*np.pi*freq_portadora*vetor_tempo)
 
 ##################################DEMODULAÇÃO#################################
 #Definindo audio demodulado
@@ -92,7 +114,8 @@ plt.title("Sinal demodulado na frequencia")
 
 ########################################FILTRO##################################
 #Filtrando o sinal
-filtrado = filtro(audio_demodulado, freq_leitura, 4000)
+# filtrado = filtro(audio_demodulado, freq_leitura, 4000)
+filtrado = filtro_meu(audio_demodulado)
 
 # # #Plotando o grafico do sinal filtrado pelo tempo
 # plt.plot(vetor_tempo[::500], filtrado[::500])
