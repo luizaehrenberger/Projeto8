@@ -12,65 +12,65 @@ def filtro(y, samplerate, cutoff_hz):
     yFiltrado = sg.lfilter(taps, 1.0, y)
     return yFiltrado
 
-def LPF(signal,fs, cutoff_hz):
-    from scipy import signal as sg
-    #####################
-    # Filtro
-    #####################
-    # https://scipy.github.io/old-wiki/pages/Cookbook/FIRFilter.html
-    nyq_rate = fs/2
-    width = 5.0/nyq_rate
-    ripple_db = 60.0 #dB
-    N , beta = sg.kaiserord(ripple_db, width)
-    taps = sg.firwin(N, cutoff_hz/nyq_rate, window=('kaiser', beta))
-    return( sg.lfilter(taps, 1.0, signal))
+# def LPF(signal,fs, cutoff_hz):
+#     from scipy import signal as sg
+#     #####################
+#     # Filtro
+#     #####################
+#     # https://scipy.github.io/old-wiki/pages/Cookbook/FIRFilter.html
+#     nyq_rate = fs/2
+#     width = 5.0/nyq_rate
+#     ripple_db = 60.0 #dB
+#     N , beta = sg.kaiserord(ripple_db, width)
+#     taps = sg.firwin(N, cutoff_hz/nyq_rate, window=('kaiser', beta))
+#     return( sg.lfilter(taps, 1.0, signal))
 
 
 #######################################################################
 signal_plot = mySignal()
 
 #leitura do arquivo de audio - 1
-signal_original, samplerate = sf.read('LuizaEstranha.wav')
+signal_original, samplerate = sf.read('Miranha.wav')
 taxa_amostragem = 44100
-signal = signal_original[1:]
+signal = signal_original[:,0]
 t = len(signal_original)/taxa_amostragem
-duracao = np.linspace(0, t, len(signal_original))
-filtro = 4000
+duracao = np.linspace(0, 4, len(signal_original))
 
-# print("original")
-# sd.play(signal_original)
-# sd.wait()
+print("original")
+sd.play(signal)
+sd.wait()
 
 #filtragem - 2 
-signal_filtrado = LPF(signal_original, taxa_amostragem, filtro)
-duracao_filtrada = np.linspace(0, 3, len(signal_filtrado))
+signal_filtrado = filtro(signal, taxa_amostragem, 4000)
+duracao_filtrada = np.linspace(0, 4, len(signal_filtrado))
 
 #Reproduza o sinal e verifique que continua audível - 3
-# print("filtrado")
-# sd.play(signal_filtrado)
-# sd.wait()
-# sf.write('audio.wav', signal_filtrado, taxa_amostragem)
+print("filtrado")
+sd.play(signal_filtrado)
+sd.wait()
+sf.write('audio.wav', signal_filtrado, taxa_amostragem)
 
 #Module esse sinal de áudio em AM com portadora de 14.000 Hz - 4
-portadora = 14000
-sinal_modulado = signal_filtrado*np.sin(4*np.pi*portadora*duracao_filtrada)
+freq_portadora = 14000
+portadora = np.sin(2*np.pi*freq_portadora*duracao_filtrada)
+sinal_modulado = signal_filtrado*portadora
 
 # Normalize esse sinal: multiplicar o sinal por uma constante (a maior possível), de modo que todos os pontos
 # do sinal permaneçam dentro do intervalo[-1,1] - 5
-sinal_normalizado = signal_original/np.abs(np.max(signal_original))
+sinal_normalizado = sinal_modulado/np.abs(np.max(sinal_modulado))
 
 #Reproduza o sinal modulado e verifique que continua audível - 6
-print("modulado")
-sd.play(sinal_modulado, taxa_amostragem)
+print("modulado e normalizado")
+sd.play(sinal_normalizado, taxa_amostragem)
 sd.wait()
 sf.write('audio.wav', sinal_modulado, taxa_amostragem)
 
 signal_plot.plotFFT(sinal_modulado, taxa_amostragem)
 #graficos
 #Gráfico 1: Sinal de áudio original normalizado – domínio do tempo.
-plt.figure("original_normalizado")
+plt.figure("modulado_normalizado")
 plt.plot(duracao, sinal_normalizado)
-plt.title("Sinal de áudio original normalizado")
+plt.title("Sinal de áudio modulado normalizado")
 plt.xlabel("Tempo (s)")
 plt.ylabel("Amplitude")
 plt.show()
